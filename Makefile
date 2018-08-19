@@ -2,8 +2,8 @@
 TARGET = led_timer
 
 # MCU name
-MCU = attiny85
-F_CPU = 8000000
+MCU = atmega328p
+F_CPU = 20000000
 PORT = /dev/tty.usbserial-A907OGFE
 LOGFILE = $(TARGET).log
 BAUD_RATE = 115200

@@ -2,7 +2,8 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-// fuses -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xff:m
+// ATtiny85 fuses -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xff:m
+// ATmega328p fuses -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xfd:m
 
 #define SLEEP_TIMER_DURATION 1
 #define WAKEUP_TIMER_DURATION 5

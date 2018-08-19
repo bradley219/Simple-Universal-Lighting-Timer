@@ -188,6 +188,7 @@ ISR(TIMER1_OVF_vect, ISR_BLOCK) {
 }
 
 int main(void) {
+    OSCCAL = 150;
 
     DDRC |= _BV(PORTC5);
 

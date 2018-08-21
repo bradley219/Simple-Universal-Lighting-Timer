@@ -5,26 +5,21 @@
 // ATtiny85 fuses -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xff:m
 // ATmega328p fuses -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xfd:m
 
-#define SLEEP_TIMER_DURATION 1
-#define WAKEUP_TIMER_DURATION 5
+#define SLEEP_TIMER_DURATION 10
+#define WAKEUP_TIMER_DURATION 30
 
-#define BUTTON_DEBOUNCE_SAMPLES (F_CPU / 400000) // 50 @ 20MHz
-#define FAST_FADE_TIME_MS 1000
+//#define BUTTON_DEBOUNCE_SAMPLES (F_CPU / 400000) // 50 @ 20MHz
+#define BUTTON_DEBOUNCE_SAMPLES 1
+#define FAST_FADE_TIME_MS 1500
 #define OFF_MIN_BRIGHT 0
 #define ON_MAX_BRIGHT 0xff
 
-#if _AVR_IOM328P_H_
-// ATmega328p
-#   define PRESCALE 1024 // might be too high for second-level accuracy
-#else
-// ATtiny85
-#   define PRESCALE 16384 // might be too high for second-level accuracy
-#endif
+#define PRESCALE 128
 
-#define CALC_PRESCALE 16384
-//#define OVF_PER_UNIT ((F_CPU / CALC_PRESCALE) * (60 * 60) / 0xff) // 1 hour
-#define OVF_PER_UNIT ((F_CPU / CALC_PRESCALE) * (60) / 0xff) // 1 minute
-//#define OVF_PER_UNIT ((F_CPU / CALC_PRESCALE) / 0xff) // 1 second
+//#define OVF_PER_UNIT ((F_CPU / PRESCALE) * (60 * 60) / 0x100) // 1 hour
+//#define OVF_PER_UNIT ((F_CPU / PRESCALE) * (60) / 0x100) // 1 minute
+//#define OVF_PER_UNIT ((F_CPU / PRESCALE) / 0x100) // 1 second
+#define OVF_PER_UNIT 1
 
 #if SLEEP_TIMER_DURATION > WAKEUP_TIMER_DURATION
 #error Sleep timer duration must be smaller than wakeup timer duration
@@ -102,9 +97,9 @@ static volatile timer_t sleep_timer;
 
 static mode_t get_mode(void) {
     if (MODE_PIN & _BV(MODE)) {
-        return MODE_NORMAL;
-    } else {
         return MODE_AUTO;
+    } else {
+        return MODE_NORMAL;
     }
 }
 
@@ -188,15 +183,13 @@ ISR(TIMER1_OVF_vect, ISR_BLOCK) {
 }
 
 int main(void) {
-    OSCCAL = 150;
-
-    DDRC |= _BV(PORTC5);
+    OSCCAL = 149;
 
     LED_DDR |= _BV(LED); // LED output
     MODE_DDR &= ~_BV(MODE); // mode switch input
     BUTTON_DDR &= ~_BV(BUTTON); // button input
     MODE_PORT |= _BV(MODE); // pull ups
-    //BUTTON_PORT |= _BV(BUTTON); // pull ups
+    BUTTON_PORT |= _BV(BUTTON); // pull ups
 
     // external interrupt on falling edge
 #if _AVR_IOM328P_H_
@@ -226,6 +219,8 @@ int main(void) {
     sei();
 
     // timer config
+    OCR0B = 0;
+
 #if _AVR_IOM328P_H_
     // ATmega328p
     TIMSK1 = _BV(TOIE1);
@@ -235,34 +230,31 @@ int main(void) {
 
     TCCR1A = _BV(WGM11);
     TCCR1B = _BV(WGM13) | _BV(WGM12);
-#   if PRESCALE == 1024
+#error Figure this out...128 is not an option for this chip
+#   if PRESCALE == 128
     TCCR1B |= _BV(CS12) | _BV(CS10);
 #   else
 #   error bad prescale value
 #   endif
 
     TCCR0A = _BV(WGM01) | _BV(WGM00);
-    //TCCR0B = _BV(CS00);
-    TCCR0B = _BV(CS01);
+    TCCR0B = _BV(CS00);
 
 #else
     // ATtiny85
     GTCCR = 0;
     TIMSK = _BV(TOIE0) | _BV(TOIE1);
 
-#   if PRESCALE == 16384
-    TCCR1 = _BV(CS13) | _BV(CS12) | _BV(CS11) | _BV(CS10);
+#   if PRESCALE == 128
+    TCCR1 = _BV(CS13);
 #   else
 #   error bad prescale value
 #   endif
 
-    TCCR0A = _BV(WGM00);
-    //TCCR0B = _BV(CS00);
-    TCCR0B = _BV(CS01);
+    TCCR0A = _BV(WGM01) | _BV(WGM00);
+    TCCR0B = _BV(CS00);
 #endif
-    
-    OCR0B = 0;
-
+   
     state_t old_state = state;
     mode_t old_mode = mode;
     uint8_t button_samples = 0;
@@ -342,12 +334,6 @@ int main(void) {
 
         old_state = now_state;
         old_mode = now_mode;
-
-        if (now_mode == MODE_NORMAL) {
-            PORTC &= ~_BV(PORTC5);
-        } else {
-            PORTC |= _BV(PORTC5);
-        }
     }
 
     return 0;

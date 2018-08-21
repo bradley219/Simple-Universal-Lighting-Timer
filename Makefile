@@ -2,8 +2,8 @@
 TARGET = led_timer
 
 # MCU name
-MCU = atmega328p
-F_CPU = 8000000
+MCU = attiny85
+F_CPU = 32768
 PORT = /dev/tty.usbserial-A907OGFE
 LOGFILE = $(TARGET).log
 BAUD_RATE = 115200
@@ -129,10 +129,10 @@ AVRDUDE_FLAGS = -p$(MCU) -P$(AVRDUDE_PORT) -c$(AVRDUDE_PROGRAMMER)
 # Increase verbosity level.  Please use this when submitting bug
 # reports about avrdude. See <http://savannah.nongnu.org/projects/avrdude> 
 # to submit bug reports.
-AVRDUDE_FLAGS += -v
+AVRDUDE_FLAGS += -v -V
 
 AVRDUDE_FUSE_FLAGS = $(AVRDUDE_FLAGS) -B50
-AVRDUDE_FLAGS += -B1
+AVRDUDE_FLAGS += -B300
 
 
 # ---------------------------------------------------------------------------

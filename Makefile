@@ -131,7 +131,7 @@ AVRDUDE_FLAGS = -p$(MCU) -P$(AVRDUDE_PORT) -c$(AVRDUDE_PROGRAMMER)
 # to submit bug reports.
 AVRDUDE_FLAGS += -v -V
 
-AVRDUDE_FUSE_FLAGS = $(AVRDUDE_FLAGS) -B50
+AVRDUDE_FUSE_FLAGS = $(AVRDUDE_FLAGS) -B500
 AVRDUDE_FLAGS += -B300
 
 
@@ -215,7 +215,7 @@ eepromburn: $(TARGET).eep
 	$(AVRDUDE) $(AVRDUDE_FLAGS) -Ueeprom:w:$<
 
 burn-fuses: 
-	$(AVRDUDE) $(AVRDUDE_FUSE_FLAGS) -u -U lfuse:w:0xdf:m -U hfuse:w:0xdf:m -U efuse:w:0xfd:m
+	$(AVRDUDE) $(AVRDUDE_FUSE_FLAGS) -u -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xff:m
 
 reset:
 	$(AVRDUDE) $(AVRDUDE_FLAGS) 

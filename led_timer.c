@@ -6,8 +6,10 @@
 // ATtiny85 fuses -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xff:m
 // ATmega328p fuses -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xfd:m
 
-#define SLEEP_TIMER_DURATION (60*30)
-#define WAKEUP_TIMER_DURATION (60*60)
+//#define SLEEP_TIMER_DEFAULT_DURATION (60*60*6)
+//#define WAKEUP_TIMER_DURATION (60*60*24)
+#define SLEEP_TIMER_DEFAULT_DURATION (150)
+#define WAKEUP_TIMER_DURATION (300)
 
 //#define BUTTON_DEBOUNCE_SAMPLES (F_CPU / 400000) // 50 @ 20MHz
 #define BUTTON_DEBOUNCE_SAMPLES 1
@@ -17,11 +19,9 @@
 
 #define PRESCALE 128
 
-//#define OVF_PER_UNIT ((F_CPU / PRESCALE) * (60 * 60) / 0x100) // 1 hour
-//#define OVF_PER_UNIT ((F_CPU / PRESCALE) * (60) / 0x100) // 1 minute
 #define OVF_PER_UNIT ((F_CPU / PRESCALE) / 0x100) // 1 second
 
-#if SLEEP_TIMER_DURATION > WAKEUP_TIMER_DURATION
+#if SLEEP_TIMER_DEFAULT_DURATION > WAKEUP_TIMER_DURATION
 #error Sleep timer duration must be smaller than wakeup timer duration
 #endif
 
@@ -180,6 +180,14 @@ static uint8_t timer_triggered(volatile timer_t *timer) {
     }
 }
 
+static uint32_t timer_get_elapsed_time(volatile timer_t *timer) {
+    return timer->ovf_count;
+}
+
+static void timer_set_duration(volatile timer_t *timer, uint32_t duration) {
+    timer->ovf_max = OVF_PER_UNIT * duration;
+}
+
 static void _mode_interrupt(void) {
     mode_t new_mode = get_mode();
     if (new_mode != mode) {
@@ -235,11 +243,11 @@ int main(void) {
 
     wakeup_timer.flags = 0;
     wakeup_timer.ovf_count = 0;
-    wakeup_timer.ovf_max = OVF_PER_UNIT * WAKEUP_TIMER_DURATION;
+    timer_set_duration(&wakeup_timer, WAKEUP_TIMER_DURATION);
     
     sleep_timer.flags = 0;
     sleep_timer.ovf_count = 0;
-    sleep_timer.ovf_max = OVF_PER_UNIT * SLEEP_TIMER_DURATION;
+    timer_set_duration(&sleep_timer, SLEEP_TIMER_DEFAULT_DURATION);
 
     sei();
 
@@ -322,6 +330,12 @@ int main(void) {
         if (old_state == STATE_ON && old_state != state) {
             // STATE_ON - on exit
             timer_cancel(&sleep_timer);
+            uint32_t dur = timer_get_elapsed_time(&sleep_timer);
+            if (dur > 0) {
+#warning enable 1800 second minimum check
+            //if (dur > 1800) {
+                timer_set_duration(&sleep_timer, dur);
+            }
         }
 
         // state transitions
@@ -346,6 +360,7 @@ int main(void) {
                 // MODE_NORMAL - on entry
                 timer_cancel(&wakeup_timer);
                 timer_cancel(&sleep_timer);
+                timer_set_duration(&sleep_timer, SLEEP_TIMER_DEFAULT_DURATION);
             } else if (now_mode == MODE_AUTO) {
                 // MODE_AUTO - on entry
                 if (state == STATE_ON) {

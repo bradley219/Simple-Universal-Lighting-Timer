@@ -91,10 +91,10 @@ LDFLAGS = -Wl,-Map=obj/$(TARGET).map,--cref
 #LDFLAGS += -Wl,-u,vfprintf -lprintf_min
 
 # Floating point printf version (requires -lm below)
-LDFLAGS += -Wl,-u,vfprintf -lprintf_flt
+#LDFLAGS += -Wl,-u,vfprintf -lprintf_flt
 
 # -lm = math library
-LDFLAGS += -lm
+#LDFLAGS += -lm
 
 
 
@@ -215,7 +215,7 @@ eepromburn: $(TARGET).eep
 	$(AVRDUDE) $(AVRDUDE_FLAGS) -Ueeprom:w:$<
 
 burn-fuses: 
-	$(AVRDUDE) $(AVRDUDE_FUSE_FLAGS) -u -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xff:m
+	$(AVRDUDE) $(AVRDUDE_FUSE_FLAGS) -u -U lfuse:w:0xe6:m -U hfuse:w:0xdf:m -U efuse:w:0xff:m
 
 reset:
 	$(AVRDUDE) $(AVRDUDE_FLAGS) 

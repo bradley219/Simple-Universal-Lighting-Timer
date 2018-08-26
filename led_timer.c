@@ -6,10 +6,8 @@
 // ATtiny85 fuses -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xff:m
 // ATmega328p fuses -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xfd:m
 
-//#define SLEEP_TIMER_DEFAULT_DURATION (60*60*6)
-//#define WAKEUP_TIMER_DURATION (60*60*24)
-#define SLEEP_TIMER_DEFAULT_DURATION (150)
-#define WAKEUP_TIMER_DURATION (300)
+#define SLEEP_TIMER_DEFAULT_DURATION (60L*60*6)
+#define WAKEUP_TIMER_DURATION (60L*60*24)
 
 //#define BUTTON_DEBOUNCE_SAMPLES (F_CPU / 400000) // 50 @ 20MHz
 #define BUTTON_DEBOUNCE_SAMPLES 1
@@ -331,9 +329,7 @@ int main(void) {
             // STATE_ON - on exit
             timer_cancel(&sleep_timer);
             uint32_t dur = timer_get_elapsed_time(&sleep_timer);
-            if (dur > 0) {
-#warning enable 1800 second minimum check
-            //if (dur > 1800) {
+            if (dur > 1800) {
                 timer_set_duration(&sleep_timer, dur);
             }
         }

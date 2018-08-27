@@ -29,14 +29,17 @@
 // ATtiny85 fuses -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xff:m
 // ATmega328p fuses -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xfd:m
 
+// ***** Configurable options ***** 
 #define SLEEP_TIMER_DEFAULT_DURATION (60L*60*6)
 #define WAKEUP_TIMER_DURATION (60L*60*24)
 
-#define BUTTON_DEBOUNCE_SAMPLES 1
 #define FAST_FADE_TIME_MS 2000
 #define OFF_MIN_BRIGHT 0
 #define ON_MAX_BRIGHT 0xff
+// ********************************
 
+// Not recommended to change config values beyond this point.
+#define BUTTON_DEBOUNCE_SAMPLES 1
 #define PRESCALE 128
 
 #define OVF_PER_UNIT ((F_CPU / PRESCALE) / 0x100) // 1 second

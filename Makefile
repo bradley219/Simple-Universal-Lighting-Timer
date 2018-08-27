@@ -10,14 +10,12 @@ BAUD_RATE = 115200
 
 # Fuses: E:FD, H:DF, L:DF
 
-
 # Output format. (can be srec, ihex, binary)
 FORMAT = ihex 
 
 # Optimization level, can be [0, 1, 2, 3, s]. 0 turns off optimization.
 # (Note: 3 is not always the best optimization level. See avr-libc FAQ.)
 OPT = s
-
 
 # List C source files here. (C dependencies are automatically generated.)
 

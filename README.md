@@ -19,7 +19,7 @@ User manual can be found in [MANUAL.md](MANUAL.md).
 
 ## Firmware
 - Make edits to configuration in [led\_timer.c](led_timer.c) if desired.
-- Update avrdude config values in the Makefile if necessary (i.e. `AVRDUDE\_PROGRAMMER`).
+- Update avrdude config values in the Makefile if necessary (i.e. `AVRDUDE_PROGRAMMER`).
 - Run `make` to compile the firmware. Build products will be found in the `obj` directory.
 - Connect the programmer to the ATtiny85 with 32.768kHz crystal installed.
 - Run `make burn-fuses` to burn the proper fuses for the project. This only needs to be done the first time.

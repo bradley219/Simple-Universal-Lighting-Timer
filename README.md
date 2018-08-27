@@ -23,5 +23,12 @@
 - Run `make program` to upload the firmware to the device. Note that the upload speed will be quite slow 
   compared to what you may be used to, due to the very slow system clock speed of 32.768kHz.
 
+## Timer Module Schematic
+
+This is the schematic for the timer/controller module only. You must supply the 5V input, the lighting, power supply for lighting, and switching mechanism.
+The simplest switching mechanism would be to use an N-channel MOSFET with the gate connected directly to the `LIGHT` XREF in the schematic.
+
+![schematic](simple_universal_lighting_timer.png)
+
 ## User Manual
 User manual can be found in [MANUAL.md](MANUAL.md).

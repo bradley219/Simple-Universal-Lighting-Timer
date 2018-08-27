@@ -1,5 +1,8 @@
 # Simple Universal Lighting Timer
 
+## User Manual
+User manual can be found in [MANUAL.md](MANUAL.md).
+
 ## Features
 - Smooth on/off transitions via PWM dimming.
 - Simple interface: only one button and one switch.
@@ -29,6 +32,3 @@ This is the schematic for the timer/controller module only. You must supply the 
 The simplest switching mechanism would be to use an N-channel MOSFET with the gate connected directly to the `LIGHT` XREF in the schematic.
 
 ![schematic](simple_universal_lighting_timer.png)
-
-## User Manual
-User manual can be found in [MANUAL.md](MANUAL.md).

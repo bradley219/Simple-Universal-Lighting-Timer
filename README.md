@@ -1,9 +1,18 @@
-- Recommended to turn off lights before switching between normal and auto modes.
-- In normal mode, lights turn on and off manually by pressing the button. No timers are enabled.
-- In auto mode:
-	- Press the button to turn on the lights. This will be the time of day that the lights always turn on every day from here on out.
-	- By default the lights will remain on for 6 hours before they turn off automatically.
-	- Manually turn the lights off by pressing the button before they automatically turn off. This will be the time of day that the lights always turn off every day from here on out.
-	- To reset back to the default 6 hours, turn the lights off, flip the switch to normal mode, and then back to auto mode. Turn the lights on to start the daily timer.
+# Simple Universal Lighting Timer
 
-	- In the event of power loss, the backup power will be able to keep the timers running for a couple hours, even though the lights will not be powered.
+## Features
+- Smooth on/off transitions via PWM dimming.
+- Simple interface: only one button and one switch.
+- Customizable daily recurring on and off timers.
+- Backup power continues to keep track of time during a loss of power.
+- Minimal, low-cost components.
+
+## Technical Specifications
+- Control module is designed to run on a 5V power supply. Lighting should use a separate supply so as to not consume the backup power.
+- Optional backup power provided by a super capacitor.
+- 5V TTL signal controls the switching of the lighting, typically through an appropriate type of transistor.
+- Real time clock driven by a 32.768kHz quartz crystal.
+- ATTiny85 MCU running very lightweight firmware that is able to execute with a 32.768kHz system clock.
+
+## User Manual
+User manual can be found in [MANUAL.md](MANUAL.md).

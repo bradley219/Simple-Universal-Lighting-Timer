@@ -1,5 +1,7 @@
 # Simple Universal Lighting Timer User Manual
 
+![Figure 1](figure1.png)
+
 ## Mode switch
 - When switched to the position closest to the power input, the device is in Normal Mode.
 - When switched to the position furthest from the power input, the device is in Auto Mode.

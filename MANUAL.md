@@ -1,6 +1,6 @@
 # Simple Universal Lighting Timer User Manual
 
-![Figure 1](figure1.png)
+![Figure 1](figure1v1.png)
 
 ## Mode switch
 - When switched to the position closest to the power input, the device is in Normal Mode.

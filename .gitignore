@@ -3,3 +3,4 @@ obj
 *.swp
 .DS_Store
 *.log
+*.idlk
